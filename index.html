@@ -1,0 +1,88 @@
+# <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dragon vs Tiger</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: sans-serif;
+      margin-top: 100px;
+      background-color: #ffffff;
+    }
+
+    .box {
+      display: inline-block;
+      width: 100px;
+      height: 100px;
+      border: 3px solid limegreen;
+      margin: 0 20px;
+      line-height: 100px;
+      font-weight: bold;
+      font-size: 20px;
+      color: #000;
+    }
+
+    .circle {
+      display: inline-block;
+      width: 100px;
+      height: 100px;
+      border: 3px solid limegreen;
+      border-radius: 50%;
+      line-height: 100px;
+      font-size: 20px;
+      color: #000;
+    }
+
+    .result {
+      margin-top: 40px;
+      font-size: 20px;
+      font-weight: bold;
+      color: red;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 25px;
+      font-size: 18px;
+      background-color: #000;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">Dragon</div>
+  <div class="circle" id="timer">10s</div>
+  <div class="box">Tiger</div>
+
+  <div class="result" id="resultText">Dragon ya Tiger</div>
+
+  <button onclick="showResult()">Show Result</button>
+
+  <script>
+    let seconds = 10;
+    let countdown = setInterval(() => {
+      seconds--;
+      document.getElementById("timer").textContent = seconds + "s";
+      if (seconds === 0) {
+        clearInterval(countdown);
+        document.getElementById("timer").textContent = "0s";
+      }
+    }, 1000);
+
+    function showResult() {
+      const options = ["Dragon", "Tiger"];
+      const result = options[Math.floor(Math.random() * options.length)];
+      document.getElementById("resultText").textContent = "Result: " + result;
+    }
+  </script>
+
+</body>
+</html>
