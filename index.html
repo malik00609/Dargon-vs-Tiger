@@ -1,86 +1,153 @@
-# <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Dragon vs Tiger</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      text-align: center;
-      font-family: sans-serif;
-      margin-top: 100px;
-      background-color: #ffffff;
+      background: linear-gradient(to right, #141e30, #243b55);
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
     }
 
-    .box {
-      display: inline-block;
-      width: 100px;
-      height: 100px;
-      border: 3px solid limegreen;
-      margin: 0 20px;
-      line-height: 100px;
+    .game {
+      text-align: center;
+      background: rgba(255,255,255,0.05);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .boxes {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .box, .circle {
+      width: 90px;
+      height: 90px;
+      border: 3px solid #00ffcc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-weight: bold;
-      font-size: 20px;
-      color: #000;
+      font-size: 18px;
+      border-radius: 10px;
     }
 
     .circle {
-      display: inline-block;
-      width: 100px;
-      height: 100px;
-      border: 3px solid limegreen;
       border-radius: 50%;
-      line-height: 100px;
-      font-size: 20px;
-      color: #000;
     }
 
     .result {
-      margin-top: 40px;
-      font-size: 20px;
-      font-weight: bold;
-      color: red;
+      margin-top: 20px;
+      font-size: 22px;
+      color: #ff4d4d;
     }
 
     button {
       margin-top: 20px;
       padding: 10px 25px;
-      font-size: 18px;
-      background-color: #000;
-      color: #fff;
+      font-size: 16px;
+      background: #00cc99;
       border: none;
+      color: white;
+      border-radius: 5px;
       cursor: pointer;
     }
 
-    button:hover {
-      background-color: green;
+    button:disabled {
+      background: gray;
+      cursor: not-allowed;
+    }
+
+    .history {
+      margin-top: 30px;
+    }
+
+    .history span {
+      background: #333;
+      padding: 8px 12px;
+      margin: 5px;
+      border-radius: 8px;
+      border: 1px solid #00ffcc;
+      display: inline-block;
     }
   </style>
 </head>
 <body>
 
-  <div class="box">Dragon</div>
-  <div class="circle" id="timer">10s</div>
-  <div class="box">Tiger</div>
+  <div class="game">
+    <div class="boxes">
+      <div class="box">Dragon</div>
+      <div class="circle" id="timer">10s</div>
+      <div class="box">Tiger</div>
+    </div>
 
-  <div class="result" id="resultText">Dragon ya Tiger</div>
+    <div class="result" id="resultText">Dragon ya Tiger</div>
 
-  <button onclick="showResult()">Show Result</button>
+    <button id="startBtn" onclick="startGame()">Show Result</button>
+
+    <div class="history" id="history">
+      <h3>Result History</h3>
+      <div id="historyList"></div>
+    </div>
+  </div>
 
   <script>
-    let seconds = 10;
-    let countdown = setInterval(() => {
-      seconds--;
-      document.getElementById("timer").textContent = seconds + "s";
-      if (seconds === 0) {
-        clearInterval(countdown);
-        document.getElementById("timer").textContent = "0s";
-      }
-    }, 1000);
+    let timer = 10;
+    let gameInterval;
+    const fixedResults = [
+      "Dragon", "Tiger", "Dragon", "Dragon", "Tiger", "Dragon", "Tiger",
+      "Tiger", "Tiger", "Dragon", "Dragon", "Tiger", "Dragon"
+    ];
+    let currentIndex = 0;
 
-    function showResult() {
-      const options = ["Dragon", "Tiger"];
-      const result = options[Math.floor(Math.random() * options.length)];
+    function startGame() {
+      document.getElementById("startBtn").disabled = true;
+      showNewResult(); // Show first immediately
+      gameInterval = setInterval(() => {
+        if (currentIndex < fixedResults.length) {
+          startTimer(10);
+        } else {
+          clearInterval(gameInterval);
+        }
+      }, 10000);
+    }
+
+    function startTimer(duration) {
+      timer = duration;
+      const timerEl = document.getElementById("timer");
+      const countdown = setInterval(() => {
+        timerEl.textContent = timer + "s";
+        timer--;
+        if (timer < 0) {
+          clearInterval(countdown);
+          showNewResult();
+        }
+      }, 1000);
+    }
+
+    function showNewResult() {
+      if (currentIndex >= fixedResults.length) return;
+
+      const result = fixedResults[currentIndex];
+      currentIndex++;
       document.getElementById("resultText").textContent = "Result: " + result;
+
+      const historyList = document.getElementById("historyList");
+      const newResult = document.createElement("span");
+      newResult.textContent = result;
+      historyList.prepend(newResult);
     }
   </script>
 
